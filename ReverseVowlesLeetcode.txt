@@ -1,0 +1,302 @@
+## Question 345 — Reverse the Vowels
+
+You are given a **String**.
+
+Your task is to **reverse only the vowels** in that String.
+
+### Remember:
+
+* Vowels are: `a, e, i, o, u`
+* Uppercase vowels are also considered vowels: `A, E, I, O, U`
+* **Only the vowels should change their positions.**
+* All consonants, numbers, spaces, and other characters must stay in their **original positions**.
+
+### Example
+
+```text
+Input:  "hello"
+Output: "holle"
+```
+
+Why?
+
+```text
+Original:   h e l l o
+                ↑   ↑
+              vowel vowel
+
+Reverse the vowels:
+
+            o e
+
+Result:     h o l l e
+```
+
+### What should you immediately think?
+
+There are vowels at different positions, and we need to exchange the vowel from the **left side** with the vowel from the **right side**.
+
+So a natural approach is:
+
+**Start from both ends → find vowels → swap them → move inward.**
+
+###Code||Solution
+
+
+class Solution {
+    public String reverseVowels(String s) {
+        char[] ch=s.toCharArray();
+        int first=0;
+        int last=s.length()-1;
+        //Character[] Vovle={'A','E','I','O','U','a','e','i','o','u'};
+        Set<Character> Vowle=new HashSet<>(Arrays.asList('A', 'E', 'I', 'O', 'U',
+                  'a', 'e', 'i', 'o', 'u'));
+        
+        while(first<=last){
+            if(Vowle.contains(s.charAt(first)) && Vowle.contains(s.charAt(last))){
+                char temp=ch[first];
+                ch[first]=ch[last];
+                ch[last]=temp; 
+                first++;
+                last--;
+            }
+            else if(!Vowle.contains(ch[last])){
+                last--;
+            }
+            else if(!Vowle.contains(ch[first])){
+                first++;
+            }
+        
+        }
+        return new String(ch);
+    }
+}
+
+
+## Explanation
+
+The main idea of this solution is to use the **Two Pointer approach** to reverse only the vowels in the String.
+
+### 1. Convert String into Character Array
+
+```java
+char[] ch = s.toCharArray();
+```
+
+A `String` in Java is immutable, which means we cannot directly change individual characters.
+
+So, we convert the String into a `char[]` because characters in an array can be modified.
+
+For example:
+
+```text
+"hello"
+
+        ↓ toCharArray()
+
+['h', 'e', 'l', 'l', 'o']
+```
+
+---
+
+### 2. Create Two Pointers
+
+```java
+int first = 0;
+int last = s.length() - 1;
+```
+
+`first` starts from the beginning of the String, while `last` starts from the end.
+
+```text
+first → h e l l o ← last
+        0 1 2 3 4
+```
+
+The two pointers move towards each other.
+
+---
+
+### 3. Store All Vowels in a Set
+
+```java
+Set<Character> Vowle = new HashSet<>(Arrays.asList(
+    'A', 'E', 'I', 'O', 'U',
+    'a', 'e', 'i', 'o', 'u'
+));
+```
+
+A `HashSet` is used to store all uppercase and lowercase vowels.
+
+This allows us to easily check whether a character is a vowel:
+
+```java
+Vowle.contains(ch[first])
+```
+
+If the character is a vowel, it returns `true`; otherwise, it returns `false`.
+
+---
+
+### 4. Continue Until the Pointers Meet
+
+```java
+while (first <= last)
+```
+
+The loop continues while the two pointers have not crossed each other.
+
+---
+
+### 5. If Both Characters Are Vowels, Swap Them
+
+```java
+if (Vowle.contains(s.charAt(first)) &&
+    Vowle.contains(s.charAt(last)))
+```
+
+This checks whether the characters at both pointers are vowels.
+
+If both are vowels, swap them:
+
+```java
+char temp = ch[first];
+ch[first] = ch[last];
+ch[last] = temp;
+```
+
+Then move both pointers towards the center:
+
+```java
+first++;
+last--;
+```
+
+For example:
+
+```text
+h e l l o
+  ↑     ↑
+ first  last
+
+Both are vowels → swap
+
+h o l l e
+```
+
+---
+
+### 6. If the Right Character Is Not a Vowel
+
+```java
+else if (!Vowle.contains(ch[last])) {
+    last--;
+}
+```
+
+If the character at `last` is not a vowel, we don't need it.
+
+So we move the `last` pointer towards the center.
+
+```text
+h e l l x
+  ↑     ↑
+ first  last
+
+x is not a vowel
+
+        ↓
+      last--
+```
+
+---
+
+### 7. If the Left Character Is Not a Vowel
+
+```java
+else if (!Vowle.contains(ch[first])) {
+    first++;
+}
+```
+
+If the character at `first` is not a vowel, we skip it and move `first` forward.
+
+```text
+h e l l o
+↑         ↑
+first    last
+
+h is not a vowel
+
+↓
+first++
+```
+
+---
+
+### 8. Convert the Character Array Back to String
+
+After all required swaps are completed:
+
+```java
+return new String(ch);
+```
+
+The modified character array is converted back into a String and returned.
+
+---
+
+## Example
+
+Input:
+
+```text
+"hello"
+```
+
+The vowels are:
+
+```text
+e, o
+```
+
+Using two pointers:
+
+```text
+h e l l o
+  ↑     ↑
+  e     o
+```
+
+Swap them:
+
+```text
+h o l l e
+```
+
+Output:
+
+```text
+"holle"
+```
+
+## Approach
+
+**Two Pointer Approach**
+
+* One pointer starts from the left.
+* One pointer starts from the right.
+* Skip characters that are not vowels.
+* When both pointers find vowels, swap them.
+* Continue until the pointers meet.
+
+## Complexity
+
+**Time Complexity:** `O(n)`
+
+Both pointers move through the String only once.
+
+**Space Complexity:** `O(n)`
+
+The String is converted into a `char[]`, which requires space proportional to the input size.
+
